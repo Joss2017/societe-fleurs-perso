@@ -1,7 +1,8 @@
-import React from "react";
 import { list_products } from "../data";
+import SideBar from "../components/Sidebar";
+import { useState } from "react";
 
-export interface TextElementPlant {
+export interface Plante {
   id: string;
   name: string;
   unitprice_ati: number;
@@ -11,19 +12,31 @@ export interface TextElementPlant {
   url_picture: string;
 }
 
-const listPlant: TextElementPlant[] = list_products;
+const listPlant: Plante[] = list_products;
 
 const Home = () => {
+  const [selectCategories, setSelectCategories] = useState<string[]>([]);
+
+  let result = [...listPlant];
+
+  if (selectCategories.length > 0) {
+    result = result.filter((x) => selectCategories.includes(x.category));
+  }
+
   return (
-    <div>
-      <div>
-        {" "}
-        <h1>Page d'accueil</h1>
-      </div>
-      ;
-      <div>
-        {listPlant.map((plante) => (
-          <li>{plante.name}</li>
+    <div className="d-flex align-items-stretch">
+      <SideBar
+        listElementPlant={listPlant}
+        onChangeCategoriesCheck={(mesDataCheck) =>
+          setSelectCategories(mesDataCheck)
+        }
+      />
+      <div className="container-fluid custom-main">
+        {result.map((item) => (
+          <li>
+            {item.name}-{item.category}-{item.rating}⭐ -coûte
+            {item.unitprice_ati}
+          </li>
         ))}
       </div>
     </div>
